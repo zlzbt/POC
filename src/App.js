@@ -118,7 +118,7 @@ export default class App extends React.Component {
         this.getAllDataList('first')
     };
 
-    getParams = (params) => {
+    getParams = (params = {}) => {
         const createDteStr = this.state.startDate;
         if (createDteStr) {
             params.createDteStr = createDteStr;

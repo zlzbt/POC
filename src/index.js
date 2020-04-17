@@ -4,23 +4,19 @@ import './index.css';
 import './App.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-// import { BrowserRouter, Route } from 'react-router-dom';
-ReactDOM.render(
+import { BrowserRouter, Route } from 'react-router-dom';
+/* ReactDOM.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>,
   document.getElementById('root')
+); */
+ReactDOM.render(
+    <BrowserRouter>
+        <Route path="/POC*" component={App}/>
+    </BrowserRouter>
+    , document.getElementById('root')
 );
-
-// if(process.env.NODE_ENV !== 'production') {
-//     React.Perf = require('react-addons-perf');
-// }
-// ReactDOM.render(
-//     <BrowserRouter>
-//         <Route path="/POC*" component={App}/>
-//     </BrowserRouter>
-//     , document.getElementById('root')
-// );
 
 
 // If you want your app to work offline and load faster, you can change
