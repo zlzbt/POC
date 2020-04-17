@@ -6,7 +6,7 @@ import DateTimePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from 'axios';
 
-const _data = {
+/* const _data = {
     "code": "200",
     "msg": "OK",
     "data": {
@@ -103,24 +103,65 @@ const _data = {
         "size": 5
     }
 }
-
+ */
 export default class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             isShowModal: false,
-            dataInfo: _data || []
+            dataInfo: []
         };
     }
 
     componentDidMount = () => {
         // 获取全部数据
+        this.getAllDataList('first')
+    };
+
+    getParams = (params) => {
+        const createDteStr = this.state.startDate;
+        if (createDteStr) {
+            params.createDteStr = createDteStr;
+        }
+        const createDteEnd = this.state.endDate;
+        if (createDteEnd) {
+            params.endDate = createDteEnd;
+        }
+        const companyCde = $('#company').val();
+        if (companyCde) {
+            params.companyCde = companyCde;
+        }
+        const status = $('#status').val();
+        if (status) {
+            params.status = status;
+        }
+        const createUsr = $('.createAtInput').val();
+        if (createUsr) {
+            params.createUsr = createUsr;
+        }
+        const headUuid = $('.reconciliationText').val();
+        if (headUuid) {
+            params.headUuid = headUuid;
+        }
+        const note = $('.remarksText').val();
+        if (note) {
+            params.note = note;
+        }
+        return params;
+    }
+
+    // 获取所有数据
+    getAllDataList = (flag) => {
         const url = config.url.queryPocInfoAll;
-        axios.post.apply(null, [url, {}]).then(feed => {
+        let params = {};
+        if(flag !== 'first'){
+            params = this.getParams(params);
+        }
+        axios.post.apply(null, [url, params]).then(feed => {
             const dataInfo = feed;
             this.setState({dataInfo})
         })
-    };
+    }
 
     // 获取选中的tr数量
     getCheckedCount = () => {
@@ -152,6 +193,7 @@ export default class App extends React.Component {
         return dd;
     };
 
+    // 格式化时间
     date2string = function(date, precise) {
         if(!date || !(date instanceof Date)){
             return '';
@@ -246,7 +288,7 @@ export default class App extends React.Component {
 
     // 查询数据  分页 或者 精确查询
     queryPocInfo = flag => {
-        const params = {};
+        let params = {};
         const dataObj = (this.state.dataInfo || {}).data || {};
         let page = dataObj.page;  //第几页
         const totalPages = dataObj.totalPages;  //总页数
@@ -262,34 +304,7 @@ export default class App extends React.Component {
                 return alert('已经是第一页了');
             }
         }else{ //查询按钮
-            const createDteStr = this.state.startDate;
-            if(createDteStr){
-                params.createDteStr = createDteStr;
-            }
-            const createDteEnd = this.state.endDate;
-            if(createDteEnd){
-                params.endDate = createDteEnd;
-            }
-            const companyCde = $('#company').val();
-            if(companyCde){
-                params.companyCde = companyCde;
-            }
-            const status = $('#status').val();
-            if(status){
-                params.status = status;
-            }
-            const createUsr = $('.createAtInput').val();
-            if(createUsr){
-                params.createUsr = createUsr;
-            }
-            const headUuid = $('.reconciliationText').val();
-            if(headUuid){
-                params.headUuid = headUuid;
-            }
-            const note = $('.remarksText').val();
-            if(note){
-                params.note = note;
-            }
+            params = this.getParams(params);
             url = config.url.queryPocInfo
         }
         // 发起后台请求  START
@@ -300,57 +315,6 @@ export default class App extends React.Component {
             this.setState({dataInfo})
         })
         // 发起后台请求 END
-
-        /* let dataInfo = {
-            "code": "200",
-            "msg": "OK",
-            "data": {
-                "content": [
-                    {
-                        "headUuid": "ff808081717dffa301717dffa6a60000",
-                        "companyCde": "MM06",
-                        "stmtRefCde": "1234567890",
-                        "sapId": 10.0,
-                        "ccyCde": "USD",
-                        "ttlAmt": 100.0,
-                        "locTtlAmt": 10.0,
-                        "ttlAmtNote": null,
-                        "note": "备注001",
-                        "verId": 12.0,
-                        "status": "DRAFT",
-                        "createDte": "2020-04-15 21:59:58",
-                        "createUsr": "张三",
-                        "recUpdDt": "2020-04-15 21:59:58",
-                        "recUpdUsr": "张三"
-                    },
-                    {
-                        "headUuid": "ff808081717dffa301717dffa6a60000",
-                        "companyCde": "MM06",
-                        "stmtRefCde": "1234567890",
-                        "sapId": 10.0,
-                        "ccyCde": "USD",
-                        "ttlAmt": 100.0,
-                        "locTtlAmt": 10.0,
-                        "ttlAmtNote": null,
-                        "note": "备注001",
-                        "verId": 12.0,
-                        "status": "DRAFT",
-                        "createDte": "2020-04-15 21:59:58",
-                        "createUsr": "张三",
-                        "recUpdDt": "2020-04-15 21:59:58",
-                        "recUpdUsr": "张三"
-                    }
-                ],
-                "totalElements": 7,
-                "totalPages": 2,
-                "page": 1,
-                "size": 2
-            }
-        }
-        if(flag === 'before'){
-            dataInfo = _data;
-        }
-        this.setState({dataInfo}) */
     }
 
     // 修改记录状态为 CANCEL
