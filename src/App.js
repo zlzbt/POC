@@ -6,7 +6,7 @@ import DateTimePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from 'axios';
 
-/* const _data = {
+const _data = {
     "code": "200",
     "msg": "OK",
     "data": {
@@ -102,14 +102,14 @@ import axios from 'axios';
         "page": 0,
         "size": 5
     }
-} */
+}
 
 export default class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             isShowModal: false,
-            dataInfo: []
+            dataInfo: _data || []
         };
     }
 
